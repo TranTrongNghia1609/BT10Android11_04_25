@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "211062362345",
+    "project_id": "videosort-8e483",
+    "storage_bucket": "videosort-8e483.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211062362345:android:3946dd60da86fe1e6d2078",
+        "android_client_info": {
+          "package_name": "vn.iotstar.videoshortfirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBti3iLpQMCeB2jBwVRVTX8uubvuwtE6-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
