@@ -34,7 +34,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import vn.iotstar.videoshortfirebase.MainActivity;
 import vn.iotstar.videoshortfirebase.R;
+import vn.iotstar.videoshortfirebase.VD1.VideoShortWithFireBase;
+import vn.iotstar.videoshortfirebase.adapter.VideosFireBaseAdapter;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText loginEmail, loginPassword;
@@ -45,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInButton googleBtn;
     GoogleSignInOptions gOptions;
     GoogleSignInClient gClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
                                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(LoginActivity.this, BaseActivity.class));
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                         finish();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -142,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInAccount gAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (gAccount != null){
             finish();
-            Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -155,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 task.getResult(ApiException.class);
                                 finish();
-                                Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             } catch (ApiException e){
                                 Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();

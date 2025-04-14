@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import vn.iotstar.videoshortfirebase.VD1.UploadVideoActivity;
 import vn.iotstar.videoshortfirebase.VD1.VideoShortWithFireBase;
 import vn.iotstar.videoshortfirebase.VD2.VideoShortWithAPIServerViewPager2;
 import vn.iotstar.videoshortfirebase.login_signup.SignUpActivity;
@@ -34,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         Button btn_videofirebase = findViewById(R.id.btn_videoFirebase);
         btn_videofirebase.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, VideoShortWithFireBase.class);
+            startActivity(intent);
+        });
+        Button btn_uploadvideo = findViewById(R.id.btn_upload);
+        btn_uploadvideo.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, UploadVideoActivity.class);
             startActivity(intent);
         });
     }

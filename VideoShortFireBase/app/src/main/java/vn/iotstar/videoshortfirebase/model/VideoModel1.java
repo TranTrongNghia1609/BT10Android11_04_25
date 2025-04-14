@@ -6,9 +6,27 @@ public class VideoModel1 implements Serializable {
     private String desc;
     private String title;
     private String url;
+    private String email;
+    private String avatarUrl;
 
     public String getDesc() {
         return desc;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public void setDesc(String desc) {

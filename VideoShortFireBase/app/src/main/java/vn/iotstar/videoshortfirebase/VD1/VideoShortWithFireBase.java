@@ -32,7 +32,7 @@ public class VideoShortWithFireBase extends AppCompatActivity {
     }
     private void getVideos() {
         // ** set database*/
-        DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference( "Video");
+        DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference( "videos");
         FirebaseRecyclerOptions<VideoModel1> options = new FirebaseRecyclerOptions.Builder<VideoModel1>()
                 .setQuery(mDataBase, VideoModel1.class).build();
         adapter = new VideosFireBaseAdapter(options);

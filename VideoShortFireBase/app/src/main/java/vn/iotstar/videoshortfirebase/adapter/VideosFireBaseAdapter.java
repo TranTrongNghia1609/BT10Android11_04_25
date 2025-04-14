@@ -12,6 +12,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -28,11 +29,16 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
     protected void onBindViewHolder(@NonNull MyHolder holder, int position, @NonNull VideoModel1 model) {
         holder.textVideoDesc.setText(model.getDesc());
         holder.textVideoTitle.setText(model.getTitle());
-
+        holder.tvEmail.setText(model.getEmail());
         holder.progressBar.setVisibility(View.VISIBLE);
         Uri videoUri = Uri.parse(model.getUrl());
 
         holder.videoView.setVideoURI(videoUri);
+
+        Glide.with(holder.imPerson.getContext())
+                .load(model.getAvatarUrl())
+                .placeholder(R.drawable.ic_person_pin)
+                .into(holder.imPerson);
 
         holder.videoView.setOnPreparedListener(mp -> {
             holder.progressBar.setVisibility(View.GONE);
@@ -84,7 +90,7 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
     public static class MyHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
         ProgressBar progressBar;
-        TextView textVideoTitle, textVideoDesc;
+        TextView textVideoTitle, textVideoDesc, tvEmail;
         ImageView imPerson, favorites, imShare, imMore;
 
         public MyHolder(@NonNull View itemView) {
@@ -97,6 +103,7 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
             favorites = itemView.findViewById(R.id.favorites);
             imShare = itemView.findViewById(R.id.imShare);
             imMore = itemView.findViewById(R.id.imMore);
+            tvEmail = itemView.findViewById(R.id.tvEmail);
         }
     }
 }
