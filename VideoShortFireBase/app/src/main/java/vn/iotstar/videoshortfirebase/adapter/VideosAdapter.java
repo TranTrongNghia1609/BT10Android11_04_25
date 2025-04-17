@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import vn.iotstar.videoshortfirebase.R;
 import vn.iotstar.videoshortfirebase.model.VideoModel;
 

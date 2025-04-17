@@ -8,6 +8,7 @@ public class VideoModel1 implements Serializable {
     private String url;
     private String email;
     private String avatarUrl;
+    private int likeCount;
 
     public String getDesc() {
         return desc;
@@ -15,6 +16,13 @@ public class VideoModel1 implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 
     public void setEmail(String email) {

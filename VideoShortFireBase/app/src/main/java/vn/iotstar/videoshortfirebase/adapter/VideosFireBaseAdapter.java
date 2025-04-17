@@ -15,7 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import vn.iotstar.videoshortfirebase.R;
 import vn.iotstar.videoshortfirebase.model.VideoModel1;
 
@@ -27,10 +34,12 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
 
     @Override
     protected void onBindViewHolder(@NonNull MyHolder holder, int position, @NonNull VideoModel1 model) {
+        String videoKey = getRef(position).getKey(); // Lấy key của video từ Firebase
         holder.textVideoDesc.setText(model.getDesc());
         holder.textVideoTitle.setText(model.getTitle());
         holder.tvEmail.setText(model.getEmail());
         holder.progressBar.setVisibility(View.VISIBLE);
+        DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("likes");
         Uri videoUri = Uri.parse(model.getUrl());
 
         holder.videoView.setVideoURI(videoUri);
@@ -65,7 +74,7 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
             return true; // Đã xử lý lỗi
         });
 
-        holder.favorites.setOnClickListener(v -> {
+        /*holder.favorites.setOnClickListener(v -> {
             boolean isFav = (boolean) holder.favorites.getTag();
             if (!isFav) {
                 holder.favorites.setImageResource(R.drawable.ic_fill_favorite);
@@ -78,7 +87,10 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
 
         // Gán mặc định icon favorite ban đầu và trạng thái false
         holder.favorites.setImageResource(R.drawable.ic_favorite);
-        holder.favorites.setTag(false);
+        holder.favorites.setTag(false);*/
+        holder.txtLikeCount.setText(String.valueOf(model.getLikeCount()));
+        handleLikes(holder, model, videoKey);
+
     }
 
     @NonNull
@@ -90,7 +102,7 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
     public static class MyHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
         ProgressBar progressBar;
-        TextView textVideoTitle, textVideoDesc, tvEmail;
+        TextView textVideoTitle, textVideoDesc, tvEmail, txtLikeCount;
         ImageView imPerson, favorites, imShare, imMore;
 
         public MyHolder(@NonNull View itemView) {
@@ -104,6 +116,58 @@ public class VideosFireBaseAdapter extends FirebaseRecyclerAdapter<VideoModel1, 
             imShare = itemView.findViewById(R.id.imShare);
             imMore = itemView.findViewById(R.id.imMore);
             tvEmail = itemView.findViewById(R.id.tvEmail);
+            txtLikeCount = itemView.findViewById(R.id.txtLikeCount);
         }
+    }
+    private void handleLikes(@NonNull MyHolder holder, @NonNull VideoModel1 model, String videoKey) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Lấy ID user hiện tại
+
+        // Hiển thị số lượt thích ban đầu
+        holder.txtLikeCount.setText(String.valueOf(model.getLikeCount()));
+
+        // Truy vấn xem user hiện tại đã like chưa
+        DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference("likes").child(videoKey);
+        likeRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean liked = snapshot.exists();
+                if (liked) {
+                    holder.favorites.setImageResource(R.drawable.ic_fill_favorite);
+                    holder.favorites.setTag(true);
+                } else {
+                    holder.favorites.setImageResource(R.drawable.ic_favorite);
+                    holder.favorites.setTag(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        // Xử lý khi nhấn nút like
+        holder.favorites.setOnClickListener(v -> {
+            boolean isLiked = (boolean) holder.favorites.getTag();
+            DatabaseReference videoRef = FirebaseDatabase.getInstance().getReference("videos").child(videoKey);
+
+            if (!isLiked) {
+                // Thêm like
+                likeRef.child(userId).setValue(true);
+                videoRef.child("likeCount").setValue(model.getLikeCount() + 1);
+                model.setLikeCount(model.getLikeCount() + 1);
+                holder.favorites.setImageResource(R.drawable.ic_fill_favorite);
+                holder.txtLikeCount.setText(String.valueOf(model.getLikeCount()));
+                holder.favorites.setTag(true);
+            } else {
+                // Bỏ like
+                likeRef.child(userId).removeValue();
+                int newCount = Math.max(0, model.getLikeCount() - 1);
+                videoRef.child("likeCount").setValue(newCount);
+                model.setLikeCount(newCount);
+                holder.favorites.setImageResource(R.drawable.ic_favorite);
+                holder.txtLikeCount.setText(String.valueOf(newCount));
+                holder.favorites.setTag(false);
+            }
+        });
     }
 }
